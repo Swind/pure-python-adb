@@ -1,0 +1,46 @@
+from typing import List
+
+from adb.device import Device
+from adb.command import Command
+
+
+class Host(Command):
+    CONNECT_RESULT_PATTERN = "(connected to|already connected)"
+
+    def _execute_cmd(self, cmd):
+        with self.create_connection() as conn:
+            conn.send(cmd)
+            result = conn.receive()
+            return result
+
+    def devices(self) -> List[Device]:
+        cmd = "host:devices"
+        result = self._execute_cmd(cmd)
+
+        devices = []
+
+        for line in result.split('\n'):
+            if not line:
+                break
+
+            serial, _ = line.split()
+            devices.append(Device(self, serial))
+
+        return devices
+
+    def version(self):
+        with self.create_connection() as conn:
+            conn.send("host:version")
+            version = conn.receive()
+            return int(version, 16)
+
+    def kill(self):
+        """
+            Ask the ADB server to quit immediately. This is used when the
+            ADB client detects that an obsolete server is running after an
+            upgrade.
+        """
+        with self.create_connection() as conn:
+            conn.send("host:kill")
+
+        return True

@@ -1,0 +1,4 @@
+recursive-exclude test *
+include README.md
+include versioneer.py
+include adb/_version.py
