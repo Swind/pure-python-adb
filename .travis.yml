@@ -1,20 +1,19 @@
 sudo: false
 language: python
 python:
-  - "3.6"
-# command to install dependencies
+- '3.6'
 install:
-  - pip install -r requirements.txt
-# command to run tests
+- pip install -r requirements.txt
 script:
-  - echo "skip test"
+- echo "skip test"
 deploy:
   skip_cleanup: true
   provider: pypi
   user: swind
   password:
-    secure: GlIZ4GKSU6CUHKFfcn2JqvJmEcdt5fQBf56zVG9+7ZeIeeWacfeWzXHICyxY84eiJtRhvpZWvkpzcV8vyJviMclih80iM251+2gmrEuojU5NefD2VeeC5m1RgL4TEq+G2vMskOYr6nTAG+r+sDt/piSi630KZpcfpM+oe455M/K/ygmbIyXHwxaE3N0cmVop/RCkIFs2kZuWqeZYOfULqPhMvzB8IYX1DY/TH/lCeumAFdS9PJ4wkxz0N1WMijB50FhvOA0rV8nADePRy4z86573UXpc+pVUBucKGigKbF4RJsW/3C096N9xdgvbsuKA1WIzBcWQPmwyIosPEwrPzBNt7BGIJFZ+YGjDd6nxz7KpQi8ZYX7h413DeJb6qpQmCNyB1TrcO7sa8K/0KzWLZWK7djqGdAaFgefYEub1knBmMBmeNfsdhOXLgGxdf/pXDMktiIJ494Ne6P/9GpC2kW5lJOtwVQWacITWLpRxhOF1m3xoHOp4euqK84GXjKnZL5PPOxPKDgCFL+LH9oUBv4kIywOxC4+OybZ4WvWBcyQ967w/9/JuUB5dsFcYbcQvR+nm2hyG9WY0Vz3ikRyt/OK8Z1DXN70uXlqjMJh1boW/GQvXemByYeF+HVihwmFyXp9S6Ucz6W6A8y4MbnnaPtwtFpy+IOdD+0FTivIjFwc=
+    secure: GjGXSJk5e52is++wzUv0/SmWtEAIXv7WcFq+p+SzFx4aOn+gnT6yp0zY/9C4qNFJk8p2TbCawbFicK7WUCqd0QoUTiG495SwlIEf5FHa2L0qWFVU2KLNLXB/FD2GosqnpsL/FIOwIqFzZ/PjeEpnDx45d7yZhXR571bdgMxzah89gQZgsHS2eBrjwKMNjTRpNP+hlGbiMRLyYh2Ay0UJG4wGL92FoOooboB6z473ZdyIKq5Hsah4+WhvQWV/oPwqLS18us4tF0zd4YO4cG8T+cgdIBF/+xgpQTSQEaWWAzi/f1PK99KtNJuy2NV+TFL03CMRBSfr0UDMoU4neSKVNXC51F9uNQCTQN2NGOtK2SJlPvQqbsnaN2IL83DA3r4RxHtHoY0U7AsTt448FDwrLrfMEDtOrocJ2DdxI/oBpkTB3/2eMZYzcUfRruxNsq05N4V8uhRyH4/tQnMU8+LEWdGfsgpZkb3ag3sZucdojFBwacBOgS/aOms/t3cQRT4wHLAYd4nYMz5ZzGKZOxv18+C95YEXl4L3vLB1ur1C/xPpfAMYJssN7MAZah+sWi6IOZGWa4DiITEJKf8NaIcM5WyUImxT+/TGvPSdLoUb5WgOqnBaiiK+4P8n8RzvUYfMvLp6G9mV0p7yctgUwUSr7dsuwyObn7UlNuuxAYGpvsM=
   on:
-    distributions: sdist bdist_wheel
+    distributions: sdist
     repo: swind/pure-python-adb
     python: '3.6'
+    tags: true
