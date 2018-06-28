@@ -63,11 +63,9 @@ class Sync:
                 stream.write(data)
             elif flag == Protocol.DONE:
                 self.connection.read(4)
-                break
+                return
             elif flag == Protocol.FAIL:
-                error = self._read_data()
-
-        return error
+                return self._read_data().decode('utf-8')
 
     def _integer(self, little_endian):
         return struct.unpack("<I", little_endian)
@@ -77,7 +75,10 @@ class Sync:
 
     def _read_data(self):
         length = self._integer(self.connection.read(4))[0]
-        return self.connection.read(length)
+        data = bytearray()
+        while len(data) < length:
+            data += self.connection.read(length - len(data))
+        return data
 
     def _send_length(self, cmd, length):
         le_len = self._little_endian(length)

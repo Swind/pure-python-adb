@@ -53,7 +53,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
         sync = Sync(sync_conn)
 
         with sync_conn:
-            sync.pull(src, dest)
+            return sync.pull(src, dest)
 
     def install(self, path):
         dest = Sync.temp(path)

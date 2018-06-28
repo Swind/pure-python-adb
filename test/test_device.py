@@ -93,3 +93,23 @@ def test_get_top_activity(device):
 def test_get_top_activities(device):
     activities = device.get_top_activities()
     assert len(activities) != 0
+
+
+def test_push_and_pull(device):
+    import hashlib
+
+    device.shell("screencap -p /sdcard/screen.png")
+    checksum = device.shell("md5sum -b /sdcard/screen.png").strip()
+
+    device.pull("/sdcard/screen.png", "./screen.png")
+    hash_md5 = hashlib.md5()
+    with open("./screen.png", "rb") as fp:
+        for chunk in iter(lambda: fp.read(4096), b""):
+            hash_md5.update(chunk)
+
+    pull_checksum = hash_md5.hexdigest()
+
+    assert checksum == pull_checksum
+
+
+
