@@ -64,12 +64,31 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
         with sync_conn:
             return sync.pull(src, dest)
 
-    def install(self, path):
+    def install(self, path,
+                forward_lock=False,  # -l
+                reinstall=False,  # -r
+                test=False,  # -t
+                installer_package_name=False,  # -i
+                shared_mass_storage=False,  # -s
+                internal_system_memory=False,  # -f
+                downgrade=False,  # -d
+                grand_all_permissions=False  # -g
+                ):
         dest = Sync.temp(path)
         self.push(path, dest)
 
+        parameters = []
+        if forward_lock: parameters.append("-l")
+        if reinstall: parameters.append("-r")
+        if test: parameters.append("-t")
+        if installer_package_name: parameters.append("-i")
+        if shared_mass_storage: parameters.append("-s")
+        if internal_system_memory: parameters.append("-f")
+        if downgrade: parameters.append("-d")
+        if grand_all_permissions: parameters.append("-g")
+
         try:
-            result = self.shell("pm install -r {}".format(cmd_quote(dest)))
+            result = self.shell("pm install {} {}".format(" ".join(parameters), cmd_quote(dest)))
             match = re.search(self.INSTALL_RESULT_PATTERN, result)
 
             if match and match.group(1) == "Success":

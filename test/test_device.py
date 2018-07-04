@@ -3,13 +3,20 @@ import os
 import pytest
 import socket
 
-from adb import ClearError
+from adb import ClearError, InstallError
 
 
 def test_install_uninstall_success(device):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    result = device.install(os.path.join(dir_path, "resources/apk/app-x86.apk"))
+    result = device.install(os.path.join(dir_path, "resources/apk/app-x86.apk"),
+                            reinstall=True,
+                            downgrade=True)
     assert result is True
+
+    with pytest.raises(InstallError) as excinfo:
+        device.install(os.path.join(dir_path, "resources/apk/app-x86.apk"))
+
+    assert "INSTALL_FAILED_ALREADY_EXISTS" in str(excinfo.value)
 
     result = device.is_installed('com.cloudmosa.helloworldapk')
     assert result is True
