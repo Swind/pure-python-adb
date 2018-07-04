@@ -2,9 +2,9 @@ import struct
 import socket
 
 from adb.protocol import Protocol
-from adb.utils import logging
+from adb.utils import logger
 
-logger = logging.get_logger(__name__)
+logger = logger.get_logger(__name__)
 
 
 class Connection:
@@ -20,7 +20,7 @@ class Connection:
     def __exit__(self, type, value, traceback):
         self.close()
 
-    def connect(self) -> socket.socket:
+    def connect(self):
         logger.debug("Connect to adb server - {}:{}".format(self.host, self.port))
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -64,19 +64,19 @@ class Connection:
     def _send(self, data):
         self.socket.send(data)
 
-    def receive(self) -> str:
+    def receive(self):
         nob = int(self._recv(4).decode('utf-8'), 16)
         recv = self._recv_into(nob)
 
         return recv.decode('utf-8')
 
-    def send(self, msg) -> bool:
+    def send(self, msg):
         msg = Protocol.encode_data(msg)
         logger.debug(msg)
         self._send(msg)
         return self._check_status()
 
-    def _check_status(self) -> bool:
+    def _check_status(self):
         recv = self._recv(4).decode('utf-8')
         if recv != Protocol.OKAY:
             error = self._recv(1024).decode('utf-8')

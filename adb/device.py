@@ -1,4 +1,3 @@
-import shlex
 import re
 import os
 
@@ -13,11 +12,21 @@ from adb.plugins.device.stat import Stat
 
 from adb.sync import Sync
 
-from adb.utils.logging import get_logger
+from adb.utils.logger import get_logger
 
 from adb import InstallError
 
 logger = get_logger(__name__)
+
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
+
+try:
+    from shlex import quote as cmd_quote
+except ImportError:
+    from pipes import quote as cmd_quote
 
 
 class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
@@ -60,7 +69,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
         self.push(path, dest)
 
         try:
-            result = self.shell("pm install -r {}".format(shlex.quote(dest)))
+            result = self.shell("pm install -r {}".format(cmd_quote(dest)))
             match = re.search(self.INSTALL_RESULT_PATTERN, result)
 
             if match and match.group(1) == "Success":

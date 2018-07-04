@@ -16,7 +16,7 @@ class Client(Host):
         conn.connect()
         return conn
 
-    def device(self, serial: str):
+    def device(self, serial):
         devices = self.devices()
 
         for device in devices:

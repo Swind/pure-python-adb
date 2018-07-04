@@ -2,7 +2,7 @@ from adb.device import Device
 
 
 class Application:
-    def __init__(self, device: Device, package: str):
+    def __init__(self, device, package):
         self._device = device
         self._package = package
 
@@ -13,9 +13,9 @@ class Application:
         pass
 
     @property
-    def tcp_recv(self) -> int:
+    def tcp_recv(self):
         return 0
 
     @property
-    def tcp_send(self) -> int:
+    def tcp_send(self):
         return 0

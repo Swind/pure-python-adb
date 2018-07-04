@@ -4,7 +4,7 @@ import time
 from adb import ClearError
 from adb.command import Command
 
-from adb.utils.logging import get_logger
+from adb.utils.logger import get_logger
 
 logger = get_logger(__name__)
 

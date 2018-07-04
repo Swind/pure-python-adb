@@ -1,5 +1,3 @@
-from typing import List
-
 from adb.device import Device
 from adb.command import Command
 
@@ -13,7 +11,7 @@ class Host(Command):
             result = conn.receive()
             return result
 
-    def devices(self) -> List[Device]:
+    def devices(self):
         cmd = "host:devices"
         result = self._execute_cmd(cmd)
 

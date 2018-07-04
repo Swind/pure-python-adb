@@ -7,15 +7,14 @@ def test_shell_sync(device):
 
 
 def test_shell_async(device):
-    result = b''
+    result = bytearray()
 
     def callback(conn):
-        nonlocal result
         while True:
             data = conn.read(1024)
             if not data:
                 break
-            result += data
+            result.extend(bytearray(data))
 
     thread = threading.Thread(target=device.shell, args=("dumpsys", callback))
     thread.start()

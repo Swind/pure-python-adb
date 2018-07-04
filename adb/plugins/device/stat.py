@@ -1,7 +1,7 @@
 import re
 
 from adb.plugins import Plugin
-from adb.utils.logging import get_logger
+from adb.utils.logger import get_logger
 
 logger = get_logger(__name__)
 

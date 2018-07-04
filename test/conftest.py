@@ -5,12 +5,13 @@ import pytest
 
 from adb.client import Client as AdbClient
 from adb.device import Device as AdbDevice
-from adb.utils.logging import get_logger
+from adb.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 # adb_host = "emulator"
-adb_host = "172.30.0.2"
+#adb_host = "172.30.0.2"
+adb_host = "127.0.0.1"
 adb_port = 5037
 emulator_port = 5554
 

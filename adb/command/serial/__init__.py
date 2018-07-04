@@ -1,5 +1,3 @@
-from typing import Dict
-
 from adb.command import Command
 
 
@@ -19,7 +17,7 @@ class Serial(Command):
             remote=remote)
         self._execute_cmd(cmd, set_transport=False)
 
-    def list_forward(self) -> Dict[str, str]:
+    def list_forward(self):
         cmd = "host-serial:{serial}:list-forward".format(serial=self.serial)
         result = self._execute_cmd(cmd, set_transport=False)
 
