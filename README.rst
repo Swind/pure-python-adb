@@ -2,6 +2,27 @@ This is pure-python implementation of the ADB client.
 
 You can use it to communicate with adb server (not the adb daemon on the device/emulator).
 
+When you use `adb` command
+
+![adb command](https://raw.githubusercontent.com/Swind/pure-python-adb/master/docs/adb_cli.png)
+
+Now you can use `pure-python-adb` to connect to adb server as adb command line
+
+![pure-python-adb](https://raw.githubusercontent.com/Swind/pure-python-adb/master/docs/adb_pure_python_adb.png)
+
+This package supports most of the adb command line tool's functionality.
+
+1. adb devices
+2. adb shell
+3. adb forward
+4. adb pull/push
+5. adb install/uninstall
+
+Requirements
+============
+
+Python 2.7+ / Python 3.6+
+
 Installation
 ============
 
@@ -122,3 +143,11 @@ Pull
 
     device.shell("screencap -p /sdcard/screen.png")
     device.pull("/sdcard/screen.png", "screen.png")
+
+More Information
+=================
+
+- [adbkit](https://github.com/openstf/stf)
+- [protocol](https://android.googlesource.com/platform/system/core/+/master/adb/protocol.txt)
+- [services](https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT)
+- [sync](https://android.googlesource.com/platform/system/core/+/master/adb/SYNC.TXT)
