@@ -9,8 +9,8 @@ from adb.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-adb_host = "emulator"
-# adb_host = "172.30.0.2"
+# adb_host = "emulator"
+adb_host = "172.19.0.2"
 # adb_host = "127.0.0.1"
 adb_port = 5037
 emulator_port = 5554
@@ -96,6 +96,9 @@ def device(request, client):
         try:
             adb_device = client.device("emulator-5554")
             result = adb_device.shell("getprop sys.boot_completed")
+            if not result:
+                return False
+
             result = int(result.strip())
 
             if result == 1:

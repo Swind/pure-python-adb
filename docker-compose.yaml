@@ -10,7 +10,7 @@ services:
     environment:
      - PYTHONPATH=/code
      - PYTHONUNBUFFERED=0
-    command: sh -c "py.test test --junit-xml test_result.xml"
+    command: sh -c "py.test test -s --junit-xml test_result.xml"
 
   emulator:
     image: swind/android-avd:latest

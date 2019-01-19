@@ -49,8 +49,10 @@ def test_clear(device):
     result = device.clear("com.android.chrome")
     assert result is True
 
-    with pytest.raises(ClearError, message="Package com.android.not.exist.package could not be cleared - [Failed]"):
+    with pytest.raises(ClearError) as excinfo:
         result = device.clear("com.android.not.exist.package")
+
+    assert "Package com.android.not.exist.package could not be cleared - [Failed]" in str(excinfo.value)
 
 
 def test_list_packages(device):
@@ -88,8 +90,10 @@ def test_shell_echo_sleep_long_time(device):
 
 
 def test_shell_echo_timeout(device):
-    with pytest.raises(socket.timeout, message="cmd `sleep 60;echo passed` should be timeout"):
+    with pytest.raises(socket.timeout) as excinfo:
         device.shell("sleep 60;echo passed", timeout=10)
+
+    assert "timed out" in str(excinfo.value)
 
 
 def test_get_top_activity(device):

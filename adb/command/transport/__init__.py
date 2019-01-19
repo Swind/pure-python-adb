@@ -60,7 +60,7 @@ class Transport(Command):
             return True
         else:
             logger.error(result)
-            raise ClearError(package, result)
+            raise ClearError(package, result.strip())
 
     def framebuffer(self):
         raise NotImplemented()

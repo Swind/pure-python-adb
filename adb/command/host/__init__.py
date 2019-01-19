@@ -21,8 +21,8 @@ class Host(Command):
             if not line:
                 break
 
-            serial, _ = line.split()
-            devices.append(Device(self, serial))
+            tokens = line.split()
+            devices.append(Device(self, tokens[0]))
 
         return devices
 
