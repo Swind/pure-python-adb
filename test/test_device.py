@@ -123,4 +123,18 @@ def test_push_and_pull(device):
     assert checksum == pull_checksum
 
 
+def test_forward(device):
+    device.killforward_all()
+    forward_map = device.list_forward()
+    assert not forward_map
+
+    device.forward("tcp:6000", "tcp:7000")
+    forward_map = device.list_forward()
+    assert forward_map['tcp:6000'] == "tcp:7000"
+
+    device.killforward_all()
+    forward_map = device.list_forward()
+    assert not forward_map
+
+
 

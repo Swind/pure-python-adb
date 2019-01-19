@@ -28,6 +28,10 @@ class Serial(Command):
         self._execute_cmd(cmd, with_response=False)
 
     def list_forward(self):
+        # Accroding to https://android.googlesource.com/platform/system/core/+/master/adb/adb_listeners.cpp#129
+        # And https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT#130
+        # The 'list-forward' always lists all existing forward connections from the adb server
+        # So we need filter these by self.
         cmd = "host-serial:{serial}:list-forward".format(serial=self.serial)
         result = self._execute_cmd(cmd)
 
@@ -35,8 +39,9 @@ class Serial(Command):
 
         for line in result.split('\n'):
             if line:
-                _, local, remote = line.split()
-                forward_map[local] = remote
+                serial, local, remote = line.split()
+                if serial == self.serial:
+                    forward_map[local] = remote
 
         return forward_map
 

@@ -5,11 +5,14 @@ from adb.command import Command
 class Host(Command):
     CONNECT_RESULT_PATTERN = "(connected to|already connected)"
 
-    def _execute_cmd(self, cmd):
+    def _execute_cmd(self, cmd, with_response=True):
         with self.create_connection() as conn:
             conn.send(cmd)
-            result = conn.receive()
-            return result
+            if with_response:
+                result = conn.receive()
+                return result
+            else:
+                conn.check_status()
 
     def devices(self):
         cmd = "host:devices"
@@ -42,3 +45,22 @@ class Host(Command):
             conn.send("host:kill")
 
         return True
+
+    def killforward_all(self):
+        cmd = "host:killforward-all"
+        self._execute_cmd(cmd, with_response=False)
+
+    def list_forward(self):
+        cmd = "host:list-forward"
+        result = self._execute_cmd(cmd)
+
+        device_forward_map = {}
+        for line in result.split('\n'):
+            if line:
+                serial, local, remote = line.split()
+                if serial not in device_forward_map:
+                    device_forward_map[serial] = {}
+
+                device_forward_map[serial][local] = remote
+
+        return device_forward_map
