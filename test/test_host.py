@@ -23,3 +23,7 @@ def test_list_forward(client, device):
     client.killforward_all()
     result = client.list_forward()
     assert not result
+
+
+def test_features(client):
+    assert client.features()

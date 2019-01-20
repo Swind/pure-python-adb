@@ -1,4 +1,5 @@
 import os
+import time
 
 import pytest
 import socket
@@ -106,7 +107,7 @@ def test_get_top_activities(device):
     assert len(activities) != 0
 
 
-def test_push_and_pull(device):
+def test_pull(device):
     import hashlib
 
     device.shell("screencap -p /sdcard/screen.png")
@@ -122,6 +123,18 @@ def test_push_and_pull(device):
 
     assert checksum == pull_checksum
 
+def test_push_stat(device):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    apk_path = os.path.join(dir_path, "resources/apk/app-x86.apk")
+    device.push(apk_path, "/sdcard/test.apk")
+
+    stat = os.stat(apk_path)
+    result = device.shell("stat /sdcard/test.apk -c %X")
+    if int(device.shell("getprop ro.build.version.sdk")) >= 27:
+        assert int(result) == int(stat.st_mtime)
+    else:
+        timestamp = int(time.time())
+        assert timestamp - 10 <= int(result) <= timestamp + 10
 
 def test_forward(device):
     device.killforward_all()
@@ -129,12 +142,50 @@ def test_forward(device):
     assert not forward_map
 
     device.forward("tcp:6000", "tcp:7000")
+    device.forward("tcp:6001", "tcp:7001")
+    device.forward("tcp:6002", "tcp:7002")
+
     forward_map = device.list_forward()
     assert forward_map['tcp:6000'] == "tcp:7000"
+    assert forward_map['tcp:6001'] == "tcp:7001"
+    assert forward_map['tcp:6002'] == "tcp:7002"
+
+    device.killforward("tcp:6000")
+    forward_map = device.list_forward()
+    assert "tcp:6000" not in forward_map
+    assert forward_map['tcp:6001'] == "tcp:7001"
+    assert forward_map['tcp:6002'] == "tcp:7002"
 
     device.killforward_all()
     forward_map = device.list_forward()
     assert not forward_map
 
+@pytest.mark.skip
+def test_killforward_all(client, device):
+    """
+    This testcase need two emulators for testing,
+    But the android docker container can'd execute two emulators at the same time.
+    If you want to execute this testcase,
+    you need to start two emulators 'emulator-5554' and 'emualtor-5556' on your machine.
+    """
+    device2 = client.device("emulator-5556")
 
+    device.forward("tcp:6001", "tcp:6001")
+    device2.forward("tcp:6002", "tcp:6002")
+
+    forward_map = device.list_forward()
+    assert forward_map['tcp:6001'] == "tcp:6001"
+    assert "tcp:6002" not in forward_map
+
+    device.killforward_all()
+    forward_map = device.list_forward()
+    assert "tcp:6001" not in forward_map
+
+    forward_map = client.list_forward()
+    assert "emulator-5556" in forward_map
+    assert forward_map["emulator-5556"]["tcp:6002"] == "tcp:6002"
+
+    client.killforward_all()
+    forward_map = client.list_forward()
+    assert not forward_map
 

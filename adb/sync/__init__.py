@@ -23,8 +23,13 @@ class Sync:
         return "{}/{}".format(Sync.TEMP_PATH, os.path.basename(path))
 
     def push(self, src, dest, mode):
+        if not os.path.exists(src):
+            raise FileNotFoundError("Can't find the source file {}".format(src))
+
+        stat = os.stat(src)
+
         stream = open(src, 'rb')
-        timestamp = int(time.time())
+        timestamp = int(stat.st_mtime)
 
         # SEND
         mode = mode | S_IFREG

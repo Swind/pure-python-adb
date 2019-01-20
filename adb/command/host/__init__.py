@@ -29,6 +29,12 @@ class Host(Command):
 
         return devices
 
+    def features(self):
+        cmd = "host:features"
+        result = self._execute_cmd(cmd)
+        features = result.split(",")
+        return features
+
     def version(self):
         with self.create_connection() as conn:
             conn.send("host:version")

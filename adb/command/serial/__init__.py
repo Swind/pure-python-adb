@@ -50,8 +50,11 @@ class Serial(Command):
         self._execute_cmd(cmd, with_response=False)
 
     def killforward_all(self):
-        cmd = "host-serial:{serial}:killforward-all".format(serial=self.serial)
-        self._execute_cmd(cmd, with_response=False)
+        # killforward-all command ignores the <host-prefix> and remove all the forward mapping.
+        # So we need to implement this function by self
+        forward_map = self.list_forward()
+        for local, remote in forward_map.items():
+            self.killforward(local)
 
     def get_device_path(self):
         cmd = "host-serial:{serial}:get-devpath".format(serial=self.serial)
