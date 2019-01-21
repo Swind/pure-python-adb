@@ -29,6 +29,23 @@ class Host(Command):
 
         return devices
 
+    def devices_ok(self):
+        cmd = "host:devices"
+        result = self._execute_cmd(cmd)
+
+        devices = []
+
+        for line in result.split('\n'):
+            if not line:
+                break
+
+            tokens = line.split()
+            if tokens[1] != u'device':
+                continue
+            devices.append(Device(self, tokens[0]))
+
+        return devices
+
     def features(self):
         cmd = "host:features"
         result = self._execute_cmd(cmd)
