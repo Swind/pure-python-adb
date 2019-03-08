@@ -1,13 +1,13 @@
 import time
 import telnetlib
+import logging
 
 import pytest
 
 from adb.client import Client as AdbClient
 from adb.device import Device as AdbDevice
-from adb.utils.logger import get_logger
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 adb_host = "emulator"
 # adb_host = "172.19.0.2"

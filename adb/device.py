@@ -1,5 +1,6 @@
 import re
 import os
+import logging
 
 from adb.command.transport import Transport
 from adb.command.serial import Serial
@@ -12,11 +13,9 @@ from adb.plugins.device.stat import Stat
 
 from adb.sync import Sync
 
-from adb.utils.logger import get_logger
-
 from adb import InstallError
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 try:
     FileNotFoundError

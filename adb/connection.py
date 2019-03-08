@@ -1,10 +1,10 @@
 import struct
 import socket
+import logging
 
 from adb.protocol import Protocol
-from adb.utils import logger
 
-logger = logger.get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Connection:

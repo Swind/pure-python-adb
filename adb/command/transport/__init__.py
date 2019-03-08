@@ -1,13 +1,11 @@
 import re
 import time
+import logging
 
 from adb import ClearError
 from adb.command import Command
 
-from adb.utils.logger import get_logger
-
-logger = get_logger(__name__)
-
+logger = logging.getLogger(__name__)
 
 class Transport(Command):
     def transport(self, connection):
