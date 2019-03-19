@@ -32,18 +32,16 @@ class Utils(Plugin):
             return None
 
     def get_top_activities(self):
-        pattern = "ACTIVITY\s([\w\.]+)/([\w\.]+)\s[\w\d]+\spid=([\d]+)"
         cmd = "dumpsys activity top | grep ACTIVITY"
         result = self.shell(cmd)
 
         activities = []
-        for line in result.split('\n'):
-            match = re.search(pattern, line)
-            if match:
-                activities.append(Activity(match.group(1), match.group(2), int(match.group(3))))
-
+        for i in result.split('\n'):
+            line = i.split()
+            if line:
+                activities.append(Activity(line[1].split('/')[0], line[1].split('/')[1], line[-1].split('=')[-1]))
         return activities
-
+    
     def get_meminfo(self, package_name):
         total_meminfo_re = re.compile('\s*TOTAL\s*(?P<pss>\d+)'
                                       '\s*(?P<private_dirty>\d+)'
