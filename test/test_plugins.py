@@ -1,4 +1,5 @@
 import time
+from adb.plugins.device.utils import Activity
 
 
 def open_chrome(device):
@@ -40,3 +41,22 @@ def test_get_cpu_stat(device):
 
     assert total_cpu_stat is not None
     assert process_cpu_stat is not None
+
+
+def test_get_top_activities(device):
+    result = device.get_top_activities()
+    assert result
+    assert isinstance(result, list)
+    for i in result:
+        assert isinstance(i, Activity)
+        assert hasattr(i, 'package')
+        assert isinstance(i.package, str)
+        assert hasattr(i, 'activity')
+        assert isinstance(i.activity, str)
+        assert hasattr(i, 'pid')
+        assert isinstance(i.pid, str)
+
+
+def test_get_top_activity(device):
+    result = device.get_top_activity()
+    assert isinstance(result, Activity)
