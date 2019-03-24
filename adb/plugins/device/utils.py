@@ -40,7 +40,11 @@ class Utils(Plugin):
         for line in result.split('\n'):
             line = line.split()
             if line and 'ACTIVITY' in line:
-                activities.append(Activity(line[1].split('/')[0], line[1].split('/')[1], line[-1].split('=')[-1]))
+                activities.append(
+                    Activity(line[1].split('/')[0],
+                             line[1].split('/')[1],
+                             line[-1].split('=')[-1].strip()    # 有可能行尾带'\r'
+                             ))
 
         return activities
 
