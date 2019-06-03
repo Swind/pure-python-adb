@@ -98,7 +98,7 @@ adb shell
             data = connection.read(1024)
             if not data:
                 break
-            print(data.decode('utf-8')))
+            print(data.decode('utf-8'))
 
         connection.close()
 
