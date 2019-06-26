@@ -12,11 +12,11 @@ from adb.plugins.device.stat import Stat
 
 from adb.sync import Sync
 
-from adb.utils.logger import get_logger
+from adb.utils.logger import AdbLogging
 
 from adb import InstallError
 
-logger = get_logger(__name__)
+logger = AdbLogging.get_logger(__name__)
 
 try:
     FileNotFoundError

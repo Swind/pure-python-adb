@@ -2,9 +2,9 @@ import struct
 import socket
 
 from adb.protocol import Protocol
-from adb.utils import logger
+from adb.utils.logger import AdbLogging
 
-logger = logger.get_logger(__name__)
+logger = AdbLogging.get_logger(__name__)
 
 
 class Connection:

@@ -1,9 +1,17 @@
 def test_list_devices(client):
     devices = client.devices()
-
     assert len(devices) > 0
     assert any(map(lambda device: device.serial == "emulator-5554", devices))
 
+def test_list_devices_by_state(client):
+    devices = client.devices(client.BOOTLOADER)
+    assert len(devices) == 0
+
+    devices = client.devices(client.OFFLINE)
+    assert len(devices) == 0
+
+    devices = client.devices(client.DEVICE)
+    assert len(devices) == 1
 
 def test_version(client):
     version = client.version()

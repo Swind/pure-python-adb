@@ -1,10 +1,8 @@
-import logging
-
 from adb.command.host import Host
 from adb.connection import Connection
+from adb.utils.logger import AdbLogging
 
-logger = logging.getLogger(__name__)
-
+logger = AdbLogging.get_logger(__name__)
 
 class Client(Host):
     def __init__(self, host='127.0.0.1', port=5037):

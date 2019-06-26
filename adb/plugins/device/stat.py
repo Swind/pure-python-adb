@@ -1,9 +1,9 @@
 import re
 
 from adb.plugins import Plugin
-from adb.utils.logger import get_logger
+from adb.utils.logger import AdbLogging
 
-logger = get_logger(__name__)
+logger = AdbLogging.get_logger(__name__)
 
 class TotalCPUStat:
     def __init__(self, user, nice, system, idle, iowait, irq, softirq, stealstolen, guest, guest_nice):

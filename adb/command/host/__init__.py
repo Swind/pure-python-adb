@@ -5,6 +5,10 @@ from adb.command import Command
 class Host(Command):
     CONNECT_RESULT_PATTERN = "(connected to|already connected)"
 
+    OFFLINE = "offline"
+    DEVICE = "device"
+    BOOTLOADER = "bootloader"
+
     def _execute_cmd(self, cmd, with_response=True):
         with self.create_connection() as conn:
             conn.send(cmd)
@@ -14,7 +18,7 @@ class Host(Command):
             else:
                 conn.check_status()
 
-    def devices(self):
+    def devices(self, state=None):
         cmd = "host:devices"
         result = self._execute_cmd(cmd)
 
@@ -25,6 +29,9 @@ class Host(Command):
                 break
 
             tokens = line.split()
+            if state and len(tokens) > 1 and tokens[1] != state:
+                continue
+
             devices.append(Device(self, tokens[0]))
 
         return devices

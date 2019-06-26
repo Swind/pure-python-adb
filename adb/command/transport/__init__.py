@@ -4,9 +4,9 @@ import time
 from adb import ClearError
 from adb.command import Command
 
-from adb.utils.logger import get_logger
+from adb.utils.logger import AdbLogging
 
-logger = get_logger(__name__)
+logger = AdbLogging.get_logger(__name__)
 
 
 class Transport(Command):
