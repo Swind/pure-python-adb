@@ -108,6 +108,23 @@ adb shell
     device = client.device("emulator-5554")
     device.shell("logcat", handler=dump_logcat)
 
+read logcat line by line
+
+.. code-block:: python
+
+    from adb.client import Client
+
+    def dump_logcat_by_line(connect):
+        file_obj = connect.socket.makefile()
+        for index in range(0, 10):
+            print("Line {}: {}".format(index, file_obj.readline().strip()))
+
+    file_obj.close()
+    connect.close()
+
+    client = Client()
+    device = client.device("emulator-5554")
+    device.shell("logcat", handler=dump_logcat_by_line)
 
 Screenshot
 ----------

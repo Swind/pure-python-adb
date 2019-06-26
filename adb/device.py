@@ -39,7 +39,6 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
 
     def create_connection(self, set_transport=True, timeout=None):
         conn = self.client.create_connection(timeout=timeout)
-        conn.connect()
 
         if set_transport:
             self.transport(conn)
