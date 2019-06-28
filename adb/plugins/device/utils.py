@@ -1,9 +1,10 @@
 import re
+import typing
 from adb.plugins import Plugin
 
 
 class Activity:
-    def __init__(self, package, activity, pid):
+    def __init__(self, package: str, activity: str, pid: str):
         self.package = package
         self.activity = activity
         self.pid = pid
@@ -24,23 +25,26 @@ class MemInfo:
 
 
 class Utils(Plugin):
-    def get_top_activity(self):
+    def get_top_activity(self) -> Activity or None:
         activities = self.get_top_activities()
         if activities:
             return activities[0]
         else:
             return None
 
-    def get_top_activities(self):
-        pattern = "ACTIVITY\s([\w\.]+)/([\w\.]+)\s[\w\d]+\spid=([\d]+)"
-        cmd = "dumpsys activity top | grep ACTIVITY"
+    def get_top_activities(self) -> typing.List[Activity]:
+        cmd = "dumpsys activity top"
         result = self.shell(cmd)
 
         activities = []
         for line in result.split('\n'):
-            match = re.search(pattern, line)
-            if match:
-                activities.append(Activity(match.group(1), match.group(2), int(match.group(3))))
+            line = line.split()
+            if line and 'ACTIVITY' in line:
+                activities.append(
+                    Activity(line[1].split('/')[0],
+                             line[1].split('/')[1],
+                             line[-1].split('=')[-1].strip()    # 有可能行尾带'\r'
+                             ))
 
         return activities
 
