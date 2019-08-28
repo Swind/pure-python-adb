@@ -3,18 +3,18 @@ import telnetlib
 
 import pytest
 
-from adb.client import Client as AdbClient
-from adb.device import Device as AdbDevice
+from ppadb.client import Client as AdbClient
+from ppadb.device import Device as AdbDevice
 import logging
 
 logger = logging.getLogger(__name__)
 
-adb_host = "emulator"
-#adb_host = "172.19.0.2"
+#adb_host = "emulator"
 #adb_host = "127.0.0.1"
+adb_host = "172.19.0.2"
 adb_port = 5037
+device_serial = "emulator-5554"
 emulator_port = 5554
-
 
 class EmulatorConsole:
     def __init__(self, host, port):
@@ -36,7 +36,6 @@ class EmulatorConsole:
     def kill(self):
         self.send("kill")
         return True
-
 
 def wait_until_true(check_fn, timeout=10, description=None, interval=1):
     start_time = time.time()
@@ -61,6 +60,9 @@ def wait_until_true(check_fn, timeout=10, description=None, interval=1):
 
             time.sleep(interval)
 
+@pytest.fixture(scope="session")
+def serial(request):
+    return device_serial
 
 @pytest.fixture(scope="session")
 def client(request):
@@ -84,7 +86,7 @@ def client(request):
 
 
 @pytest.fixture(scope="session")
-def device(request, client):
+def device(request, client, serial):
     def emulator_console_is_connectable():
         try:
             console = EmulatorConsole(host=adb_host, port=emulator_port)
@@ -94,7 +96,7 @@ def device(request, client):
 
     def is_boot_completed():
         try:
-            adb_device = client.device("emulator-5554")
+            adb_device = client.device(serial)
             result = adb_device.shell("getprop sys.boot_completed")
             if not result:
                 return False

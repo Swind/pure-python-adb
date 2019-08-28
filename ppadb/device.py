@@ -1,20 +1,21 @@
 import re
 import os
 
-from adb.command.transport import Transport
-from adb.command.serial import Serial
+from ppadb.command.transport import Transport
+from ppadb.command.serial import Serial
 
-from adb.plugins.device.input import Input
-from adb.plugins.device.utils import Utils
-from adb.plugins.device.wm import WM
-from adb.plugins.device.traffic import Traffic
-from adb.plugins.device.stat import Stat
+from ppadb.plugins.device.input import Input
+from ppadb.plugins.device.utils import Utils
+from ppadb.plugins.device.wm import WM
+from ppadb.plugins.device.traffic import Traffic
+from ppadb.plugins.device.cpustat import CPUStat
+from ppadb.plugins.device.batterystats import BatteryStats
 
-from adb.sync import Sync
+from ppadb.sync import Sync
 
-from adb.utils.logger import AdbLogging
+from ppadb.utils.logger import AdbLogging
 
-from adb import InstallError
+from ppadb import InstallError
 
 logger = AdbLogging.get_logger(__name__)
 
@@ -29,7 +30,7 @@ except ImportError:
     from pipes import quote as cmd_quote
 
 
-class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
+class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats):
     INSTALL_RESULT_PATTERN = "(Success|Failure|Error)\s?(.*)"
     UNINSTALL_RESULT_PATTERN = "(Success|Failure.*|.*Unknown package:.*)"
 
@@ -45,16 +46,29 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, Stat):
 
         return conn
 
-    def push(self, src, dest, mode=0o644):
-        if not os.path.exists(src):
-            raise FileNotFoundError("Cannot find {}".format(src))
-
+    def _push(self, src, dest, mode):
         # Create a new connection for file transfer
         sync_conn = self.sync()
         sync = Sync(sync_conn)
 
         with sync_conn:
             sync.push(src, dest, mode)
+
+    def push(self, src, dest, mode=0o644):
+        if not os.path.exists(src):
+            raise FileNotFoundError("Cannot find {}".format(src))
+        elif os.path.isfile(src):
+            self._push(src, dest, mode)
+        elif os.path.isdir(src):
+            basename = os.path.basename(src)
+
+            for root, dirs, files in os.walk(src):
+                root_dir_path = os.path.join(basename, root.replace(src, ""))
+
+                self.shell("mkdir -p {}/{}".format(dest, root_dir_path))
+
+                for item in files:
+                    self._push(os.path.join(root, item), os.path.join(dest, root_dir_path, item), mode)
 
     def pull(self, src, dest):
         sync_conn = self.sync()

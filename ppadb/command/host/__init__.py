@@ -1,5 +1,5 @@
-from adb.device import Device
-from adb.command import Command
+from ppadb.device import Device
+from ppadb.command import Command
 
 
 class Host(Command):

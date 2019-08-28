@@ -1,5 +1,5 @@
 import re
-from adb.plugins import Plugin
+from ppadb.plugins import Plugin
 
 
 class Activity:

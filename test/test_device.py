@@ -4,7 +4,7 @@ import time
 import pytest
 import socket
 
-from adb import ClearError, InstallError
+from ppadb import ClearError, InstallError
 
 
 def test_install_uninstall_success(device):
@@ -135,6 +135,15 @@ def test_push_stat(device):
     else:
         timestamp = int(time.time())
         assert timestamp - 10 <= int(result) <= timestamp + 10
+
+def test_push_dir(device):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    apk_path = os.path.join(dir_path, "resources/apk")
+    device.push(apk_path, "/sdcard")
+
+    result = device.shell("ls /sdcard/apk")
+    assert "app-armeabi-v7a.apk" in result
+    assert "app-x86.apk" in result
 
 def test_forward(device):
     device.killforward_all()

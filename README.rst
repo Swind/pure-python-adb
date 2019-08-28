@@ -38,7 +38,7 @@ Connect to adb server and get the version
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     # Default is "127.0.0.1" and 5037
     client = AdbClient(host="127.0.0.1", port=5037)
     print(client.version())
@@ -50,7 +50,7 @@ Connect to a device
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     # Default is "127.0.0.1" and 5037
     client = AdbClient(host="127.0.0.1", port=5037)
     device = client.device("emulator-5554")
@@ -61,7 +61,7 @@ List all devices ( adb devices ) and install/uninstall an APK on all devices
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
 
     apk_path = "example.apk"
 
@@ -85,7 +85,7 @@ adb shell
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     # Default is "127.0.0.1" and 5037
     client = AdbClient(host="127.0.0.1", port=5037)
     device = client.device("emulator-5554")
@@ -102,7 +102,7 @@ adb shell
 
         connection.close()
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     # Default is "127.0.0.1" and 5037
     client = AdbClient(host="127.0.0.1", port=5037)
     device = client.device("emulator-5554")
@@ -112,7 +112,7 @@ read logcat line by line
 
 .. code-block:: python
 
-    from adb.client import Client
+    from ppadb.client import Client
 
     def dump_logcat_by_line(connect):
         file_obj = connect.socket.makefile()
@@ -131,19 +131,19 @@ Screenshot
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     client = AdbClient(host="127.0.0.1", port=5037)
     device = client.device("emulator-5554")
     result = device.screencap()
     with open("screen.png", "wb") as fp:
         fp.write(result)
 
-Push
+Push file or folder
 ----
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     client = AdbClient(host="127.0.0.1", port=5037)
     device = client.device("emulator-5554")
 
@@ -154,12 +154,21 @@ Pull
 
 .. code-block:: python
 
-    from adb.client import Client as AdbClient
+    from ppadb.client import Client as AdbClient
     client = AdbClient(host="127.0.0.1", port=5037)
     device = client.device("emulator-5554")
 
     device.shell("screencap -p /sdcard/screen.png")
     device.pull("/sdcard/screen.png", "screen.png")
+
+
+Enable debug logger
+--------------------
+
+.. code-block:: python
+
+    logging.getLogger("ppadb").setLevel(logging.DEBUG)
+
 
 How to run test cases
 ======================

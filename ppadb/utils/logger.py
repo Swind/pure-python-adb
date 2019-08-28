@@ -1,10 +1,9 @@
 import logging
 
-logging.getLogger("adb").setLevel(logging.CRITICAL)
-logging.basicConfig()
+logging.getLogger("ppadb").setLevel(logging.CRITICAL)
 
 class AdbLogging:
-    PACKAGE_NAME = "adb"
+    PACKAGE_NAME = "ppadb"
     DEFAULT_FORMAT =  logging.Formatter(fmt='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                               datefmt='%d-%m-%Y:%H:%M:%S')
     DEFAULT_LEVEL = logging.CRITICAL

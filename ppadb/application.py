@@ -1,6 +1,3 @@
-from adb.device import Device
-
-
 class Application:
     def __init__(self, device, package):
         self._device = device

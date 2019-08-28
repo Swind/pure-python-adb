@@ -1,7 +1,8 @@
 import re
+import time
 
-from adb.plugins import Plugin
-from adb.utils.logger import AdbLogging
+from ppadb.plugins import Plugin
+from ppadb.utils.logger import AdbLogging
 
 logger = AdbLogging.get_logger(__name__)
 
@@ -84,16 +85,31 @@ class ProcessCPUStat:
         return self.utime + self.stime
 
 
-class Stat(Plugin):
+class CPUStat(Plugin):
     total_cpu_pattern = re.compile(
         "cpu\s+([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s([\d]+)\s")
+
+    def cpu_times(self):
+        return self.get_total_cpu()
+
+    def cpu_percent(self, interval=1):
+        cpu_times_start = self.cpu_times()
+        time.sleep(interval)
+        cpu_times_end = self.cpu_times()
+
+        diff = cpu_times_end - cpu_times_start
+        return round(((diff.user + diff.system) / diff.total()) * 100, 2)
+
+    def cpu_count(self):
+        result = self.shell('ls /sys/devices/system/cpu')
+        match = re.findall(r'cpu[0-9+]', result)
+        return len(match)
 
     def get_total_cpu(self):
         result = self.shell('cat /proc/stat')
         match = self.total_cpu_pattern.search(result)
         if not match and len(match.groups()) != 10:
-            msg = "Can't get the total cpu usage from /proc/stat"
-            logger.error(msg)
+            logger.error("Can't get the total cpu usage from /proc/stat")
             return None
 
         return TotalCPUStat(*map(lambda x: int(x), match.groups()))

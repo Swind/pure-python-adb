@@ -2,8 +2,8 @@ import struct
 import time
 import os
 
-from adb.protocol import Protocol
-from adb.sync.stats import S_IFREG
+from ppadb.protocol import Protocol
+from ppadb.sync.stats import S_IFREG
 
 import logging
 

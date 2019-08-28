@@ -1,6 +1,6 @@
-from adb.command.host import Host
-from adb.connection import Connection
-from adb.utils.logger import AdbLogging
+from ppadb.command.host import Host
+from ppadb.connection import Connection
+from ppadb.utils.logger import AdbLogging
 
 logger = AdbLogging.get_logger(__name__)
 

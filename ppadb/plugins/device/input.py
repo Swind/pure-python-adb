@@ -1,4 +1,4 @@
-from adb.plugins import Plugin
+from ppadb.plugins import Plugin
 
 
 class Source:

@@ -1,4 +1,4 @@
-from adb.command import Command
+from ppadb.command import Command
 
 
 class Serial(Command):
@@ -28,7 +28,7 @@ class Serial(Command):
         self._execute_cmd(cmd, with_response=False)
 
     def list_forward(self):
-        # Accroding to https://android.googlesource.com/platform/system/core/+/master/adb/adb_listeners.cpp#129
+        # According to https://android.googlesource.com/platform/system/core/+/master/adb/adb_listeners.cpp#129
         # And https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT#130
         # The 'list-forward' always lists all existing forward connections from the adb server
         # So we need filter these by self.

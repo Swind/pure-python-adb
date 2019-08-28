@@ -29,9 +29,9 @@ def test_get_device_path(device):
     assert result == 'unknown'
 
 
-def test_get_serial_no(device):
+def test_get_serial_no(device, serial):
     result = device.get_serial_no()
-    assert result == 'emulator-5554'
+    assert result == serial
 
 
 def test_get_state(device):
