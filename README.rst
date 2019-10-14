@@ -148,7 +148,7 @@ Screenshot
         fp.write(result)
 
 Push file or folder
-----
+--------------------
 
 .. code-block:: python
 
