@@ -1,3 +1,12 @@
+The package name has been renamed from 'adb' to 'ppadb'
+=========================================================
+
+From version **v0.2.1-dev**, the package name has been renamed from 'adb' to 'ppadb' to avoid conflit with Google `google/python-adb`_
+
+
+Introduction
+==================
+
 This is pure-python implementation of the ADB client.
 
 You can use it to communicate with adb server (not the adb daemon on the device/emulator).
@@ -266,3 +275,4 @@ ADB documents
 .. _protocol: https://android.googlesource.com/platform/system/core/+/master/adb/protocol.txt
 .. _services: https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT
 .. _sync: https://android.googlesource.com/platform/system/core/+/master/adb/SYNC.TXT
+.. _`google/python-adb`: https://github.com/google/python-adb
