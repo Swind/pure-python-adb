@@ -25,10 +25,11 @@ class BatteryStats(Plugin):
                 continue
 
             tokens = line.split(",", 4)
-            if not len(tokens) < 5:
+            if len(tokens) < 5:
                 continue
 
             dummy, uid, mode, id, remaining_fields = tokens
+            print(dummy, uid, mode, id, remaining_fields)
             SectionClass = section_module.get_section(id)
             if not SectionClass:
                 logger.error("Unknown section {} in batterystats".format(id))
@@ -37,6 +38,6 @@ class BatteryStats(Plugin):
             if id not in sections:
                 sections[id] = []
 
-            sections[id].append(SectionClass(**remaining_fields.split(",")))
+            sections[id].append(SectionClass(*remaining_fields.split(",")))
 
         return sections

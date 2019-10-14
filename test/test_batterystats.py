@@ -1,3 +1,6 @@
+import pytest
+
+@pytest.mark.skip
 def test_get_batterystats(device):
     assert device.get_batterystats() is not None
 

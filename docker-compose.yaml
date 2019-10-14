@@ -1,7 +1,7 @@
-version: '2'
+version: '3'
 services:
   python_environment:
-    build: .
+    image: python:3
     depends_on:
      - emulator
     volumes:
@@ -10,14 +10,13 @@ services:
     environment:
      - PYTHONPATH=/code
      - PYTHONUNBUFFERED=0
-    command: sh -c "py.test test --junit-xml test_result.xml"
+    command: sh -c "pip install -r requirements.txt;py.test test -s --junit-xml test_result.xml"
 
   emulator:
-    image: swind/android-avd:latest
+    image: swind/android-emulator:android_28
     environment:
-     - noVNC=true
      - ANDROID_AVD_EXTRA_ARGS=--device 8 --force
-     - ANDROID_EMULATOR_EXTRA_ARGS=-skin 1080x1920 -memory 2048 -no-boot-anim -qemu -vnc :0
+     - ANDROID_EMULATOR_EXTRA_ARGS=-skin 1080x1920 -memory 2048 -no-boot-anim -gpu host -qemu
     ports:
       - 6080:6080
     devices:
