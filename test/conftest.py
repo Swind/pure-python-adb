@@ -9,9 +9,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-adb_host = "emulator"
+#adb_host = "emulator"
 #adb_host = "127.0.0.1"
-#adb_host = "172.17.0.2"
+adb_host = "172.20.0.2"
 adb_port = 5037
 device_serial = "emulator-5554"
 emulator_port = 5554

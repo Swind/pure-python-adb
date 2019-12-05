@@ -170,6 +170,24 @@ Pull
     device.shell("screencap -p /sdcard/screen.png")
     device.pull("/sdcard/screen.png", "screen.png")
 
+Connect to device
+--------------------
+
+.. code-block:: python
+    from ppadb.client import Client as AdbClient
+    client = AdbClient(host="127.0.0.1", port=5037)
+    client.remote_connect("172.20.0.1", 5555)
+
+    device = client.device("172.20.0.1:5555")
+
+    # Disconnect all devices
+    client.remote_disconnect()
+
+    ##Disconnect 172.20.0.1
+    # client.remote_disconnect("172.20.0.1")
+    ##Or
+    # client.remote_disconnect("172.20.0.1", 5555)
+
 
 Enable debug logger
 --------------------
