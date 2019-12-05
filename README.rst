@@ -66,7 +66,7 @@ Connect to a device
 
 
 List all devices ( adb devices ) and install/uninstall an APK on all devices
-----------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
 .. code-block:: python
 
@@ -87,7 +87,7 @@ List all devices ( adb devices ) and install/uninstall an APK on all devices
 
     # Uninstall
     for device in devices:
-        device.uninstall("example.package)
+        device.uninstall("example.package")
 
 adb shell
 ---------
