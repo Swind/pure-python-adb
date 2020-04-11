@@ -22,13 +22,20 @@ class Sync:
     def temp(path):
         return "{}/{}".format(Sync.TEMP_PATH, os.path.basename(path))
 
-    def push(self, src, dest, mode):
+    def push(self, src, dest, mode, progress=None):
+        """Push from local path |src| to |dest| on device.
+
+        @param progress: callback, called with (filename, total_size, sent_size)
+        """
         if not os.path.exists(src):
             raise FileNotFoundError("Can't find the source file {}".format(src))
 
         stat = os.stat(src)
 
         timestamp = int(stat.st_mtime)
+
+        total_size = os.path.getsize(src)
+        sent_size = 0
 
         # SEND
         mode = mode | S_IFREG
@@ -45,8 +52,12 @@ class Sync:
                 if not chunk:
                     break
 
+                sent_size += len(chunk)
                 self._send_length(Protocol.DATA, len(chunk))
                 self.connection.write(chunk)
+
+                if progress is not None:
+                    progress(src, total_size, sent_size)
 
         # DONE
         self._send_length(Protocol.DONE, timestamp)
