@@ -25,7 +25,7 @@ class Sync:
     def push(self, src, dest, mode, progress=None):
         """Push from local path |src| to |dest| on device.
 
-        @param progress: callback, called with (filename, total_size, sent_size)
+        :param progress: callback, called with (filename, total_size, sent_size)
         """
         if not os.path.exists(src):
             raise FileNotFoundError("Can't find the source file {}".format(src))

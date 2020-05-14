@@ -189,6 +189,10 @@ class Transport(Command):
                 raise RuntimeError(result.strip())
 
     def wait_boot_complete(self, timeout=60, timedelta=1):
+        """
+        :param timeout: second
+        :param timedelta: second
+        """
         cmd = 'getprop sys.boot_completed'
 
         end_time = time.time() + timeout
