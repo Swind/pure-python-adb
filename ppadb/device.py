@@ -46,19 +46,19 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
 
         return conn
 
-    def _push(self, src, dest, mode):
+    def _push(self, src, dest, mode, progress):
         # Create a new connection for file transfer
         sync_conn = self.sync()
         sync = Sync(sync_conn)
 
         with sync_conn:
-            sync.push(src, dest, mode)
+            sync.push(src, dest, mode, progress)
 
-    def push(self, src, dest, mode=0o644):
+    def push(self, src, dest, mode=0o644, progress=None):
         if not os.path.exists(src):
             raise FileNotFoundError("Cannot find {}".format(src))
         elif os.path.isfile(src):
-            self._push(src, dest, mode)
+            self._push(src, dest, mode, progress)
         elif os.path.isdir(src):
             basename = os.path.basename(src)
 
@@ -68,7 +68,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
                 self.shell("mkdir -p {}/{}".format(dest, root_dir_path))
 
                 for item in files:
-                    self._push(os.path.join(root, item), os.path.join(dest, root_dir_path, item), mode)
+                    self._push(os.path.join(root, item), os.path.join(dest, root_dir_path, item), mode, progress)
 
     def pull(self, src, dest):
         sync_conn = self.sync()
