@@ -7,3 +7,6 @@ dist
 .repo
 .pytest_cache
 *.pyc
+venv
+test_result.xml
+.python-version

@@ -123,6 +123,7 @@ def test_pull(device):
 
     assert checksum == pull_checksum
 
+
 def test_push_stat(device):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     apk_path = os.path.join(dir_path, "resources/apk/app-x86.apk")
@@ -136,6 +137,7 @@ def test_push_stat(device):
         timestamp = int(time.time())
         assert timestamp - 10 <= int(result) <= timestamp + 10
 
+
 def test_push_dir(device):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     apk_path = os.path.join(dir_path, "resources/apk")
@@ -144,6 +146,26 @@ def test_push_dir(device):
     result = device.shell("ls /sdcard/apk")
     assert "app-armeabi-v7a.apk" in result
     assert "app-x86.apk" in result
+
+
+def test_push_with_progress(device):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    apk_path = os.path.join(dir_path, "resources/apk/app-x86.apk")
+
+    result = []
+
+    def progress(file_name, total_size, sent_size):
+        result.append({
+            "file_name": file_name,
+            "total_size": total_size,
+            "sent_size": sent_size
+        })
+
+    device.push(apk_path, "/sdcard/test.apk", progress=progress)
+
+    assert result
+    assert result[-1]["total_size"] == result[-1]["sent_size"]
+
 
 def test_forward(device):
     device.killforward_all()
@@ -168,6 +190,7 @@ def test_forward(device):
     device.killforward_all()
     forward_map = device.list_forward()
     assert not forward_map
+
 
 @pytest.mark.skip
 def test_killforward_all(client, device):
@@ -197,4 +220,3 @@ def test_killforward_all(client, device):
     client.killforward_all()
     forward_map = client.list_forward()
     assert not forward_map
-
