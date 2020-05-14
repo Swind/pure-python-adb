@@ -191,7 +191,7 @@ class Transport(Command):
     def wait_boot_complete(self, timeout=60, timedelta=1):
         cmd = 'getprop sys.boot_completed'
 
-        end_time = time.time() + timeout * 1000
+        end_time = time.time() + timeout
 
         while True:
             try:
