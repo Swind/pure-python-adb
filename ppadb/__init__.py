@@ -1,4 +1,4 @@
-__version__ = "0.2.3-dev"
+__version__ = "0.2.4-dev"
 
 class InstallError(Exception):
     def __init__(self, path, error):
