@@ -22,7 +22,7 @@ classifiers = [
 
 setup(
     name='pure-python-adb',
-    version="0.2.5-dev",
+    version="0.2.6-dev",
     description='Pure python implementation of the adb client',
     long_description=readme + '\n\n' + history,
     author='Swind Ou',
