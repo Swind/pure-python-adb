@@ -35,6 +35,7 @@ class Connection:
         try:
             self.socket.connect((self.host, self.port))
         except socket.error as e:
+            self.close()
             raise RuntimeError("ERROR: connecting to {}:{} {}.\nIs adb running on your computer?".format(
                 self.host,
                 self.port,
@@ -44,8 +45,14 @@ class Connection:
         return self.socket
 
     def close(self):
+        if not self.socket:
+            return
+
         logger.debug("Connection closed...")
-        self.socket.close()
+        try:
+            self.socket.close()
+        except OSError:
+            pass
 
     ##############################################################################################################
     #
