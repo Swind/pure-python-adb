@@ -1,3 +1,8 @@
+try:
+    from asyncio import get_running_loop
+except ImportError:  # pragma: no cover
+    from asyncio import get_event_loop as get_running_loop  # Python 3.6 compatibility
+
 import struct
 import os
 
@@ -5,7 +10,20 @@ from ppadb.protocol import Protocol
 from ppadb.sync.stats import S_IFREG
 from ppadb.utils.logger import AdbLogging
 
+import aiofiles
+
 logger = AdbLogging.get_logger(__name__)
+
+
+def _get_src_info(src):
+    exists = os.path.exists(src)
+    if not exists:
+        return exists, None, None
+
+    timestamp = os.stat(src).st_mtime
+    total_size = os.path.getsize(src)
+
+    return exists, timestamp, total_size
 
 
 class SyncAsync:
@@ -18,14 +36,11 @@ class SyncAsync:
         """Push from local path |src| to |dest| on device.
         :param progress: callback, called with (filename, total_size, sent_size)
         """
-        if not os.path.exists(src):
+        exists, timestamp, total_size = await get_running_loop().run_in_executor(None, _get_src_info, src)
+
+        if not exists:
             raise FileNotFoundError("Can't find the source file {}".format(src))
 
-        stat = os.stat(src)
-
-        timestamp = int(stat.st_mtime)
-
-        total_size = os.path.getsize(src)
         sent_size = 0
 
         # SEND
@@ -34,9 +49,9 @@ class SyncAsync:
         await self._send_str(Protocol.SEND, args)
 
         # DATA
-        with open(src, 'rb') as stream:
+        async with aiofiles.open(src, 'rb') as stream:
             while True:
-                chunk = stream.read(self.DATA_MAX_LENGTH)
+                chunk = await stream.read(self.DATA_MAX_LENGTH)
                 if not chunk:
                     break
 
@@ -56,13 +71,13 @@ class SyncAsync:
         await self._send_str(Protocol.RECV, src)
 
         # DATA
-        with open(dest, 'wb') as stream:
+        async with aiofiles.open(dest, 'wb') as stream:
             while True:
                 flag = (await self.connection.read(4)).decode('utf-8')
 
                 if flag == Protocol.DATA:
                     data = await self._read_data()
-                    stream.write(data)
+                    await stream.write(data)
                     continue
 
                 if flag == Protocol.DONE:

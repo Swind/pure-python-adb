@@ -1,8 +1,23 @@
+try:
+    from asyncio import get_running_loop
+except ImportError:  # pragma: no cover
+    from asyncio import get_event_loop as get_running_loop  # Python 3.6 compatibility
+
 import re
 import os
 
 from ppadb.command.transport_async import TransportAsync
 from ppadb.sync_async import SyncAsync
+
+
+def _get_src_info(src):
+    exists = os.path.exists(src)
+    isfile = os.path.isfile(src)
+    isdir = os.path.isdir(src)
+    basename = os.path.basename(src)
+    walk = None if not isdir else list(os.walk(src))
+
+    return exists, isfile, isdir, basename, walk
 
 
 class DeviceAsync(TransportAsync):
@@ -30,16 +45,15 @@ class DeviceAsync(TransportAsync):
             await sync.push(src, dest, mode, progress)
 
     async def push(self, src, dest, mode=0o644, progress=None):
-        if not os.path.exists(src):
+        exists, isfile, isdir, basename, walk = await get_running_loop().run_in_executor(None, _get_src_info, src)
+        if not exists:
             raise FileNotFoundError("Cannot find {}".format(src))
 
-        if os.path.isfile(src):
+        if isfile:
             await self._push(src, dest, mode, progress)
 
-        elif os.path.isdir(src):
-            basename = os.path.basename(src)
-
-            for root, dirs, files in os.walk(src):
+        elif isdir:
+            for root, dirs, files in walk:
                 root_dir_path = os.path.join(basename, root.replace(src, ""))
 
                 await self.shell("mkdir -p {}/{}".format(dest, root_dir_path))
