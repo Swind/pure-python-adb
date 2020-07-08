@@ -81,7 +81,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
                 forward_lock=False,  # -l
                 reinstall=False,  # -r
                 test=False,  # -t
-                installer_package_name=False,  # -i
+                installer_package_name="",  # -i {installer_package_name}
                 shared_mass_storage=False,  # -s
                 internal_system_memory=False,  # -f
                 downgrade=False,  # -d
@@ -94,7 +94,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
         if forward_lock: parameters.append("-l")
         if reinstall: parameters.append("-r")
         if test: parameters.append("-t")
-        if installer_package_name: parameters.append("-i")
+        if len(installer_package_name) > 0: parameters.append("-i {}".format(installer_package_name))
         if shared_mass_storage: parameters.append("-s")
         if internal_system_memory: parameters.append("-f")
         if downgrade: parameters.append("-d")
