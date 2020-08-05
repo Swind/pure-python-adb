@@ -31,6 +31,7 @@ setup(
     license='MIT license',
     packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test"]),
     install_requires=[],
+    extras_require={"async": ["aiofiles>=0.4.0"]},
     keywords="adb",
     classifiers=classifiers,
 )
