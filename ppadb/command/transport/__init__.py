@@ -45,7 +45,7 @@ class Transport(Command):
             conn.send(cmd)
             result = conn.read_all()
 
-        if result[5] == 0x0d:
+        if result and len(result) > 5 and result[5] == 0x0d:
             return result.replace(b'\r\n', b'\n')
         else:
             return result
