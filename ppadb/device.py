@@ -60,10 +60,14 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
         elif os.path.isfile(src):
             self._push(src, dest, mode, progress)
         elif os.path.isdir(src):
+
             basename = os.path.basename(src)
 
             for root, dirs, files in os.walk(src):
-                root_dir_path = os.path.join(basename, root.replace(src, ""))
+                subdir = root.replace(src, "")
+                if subdir.startswith("/"):
+                    subdir = subdir[1:]
+                root_dir_path = os.path.join(basename, subdir)
 
                 self.shell("mkdir -p {}/{}".format(dest, root_dir_path))
 
