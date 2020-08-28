@@ -7,17 +7,8 @@ import re
 import os
 
 from ppadb.command.transport_async import TransportAsync
+from ppadb.device import _get_src_info
 from ppadb.sync_async import SyncAsync
-
-
-def _get_src_info(src):
-    exists = os.path.exists(src)
-    isfile = os.path.isfile(src)
-    isdir = os.path.isdir(src)
-    basename = os.path.basename(src)
-    walk = None if not isdir else list(os.walk(src))
-
-    return exists, isfile, isdir, basename, walk
 
 
 class DeviceAsync(TransportAsync):
@@ -54,12 +45,13 @@ class DeviceAsync(TransportAsync):
 
         elif isdir:
             for root, dirs, files in walk:
-                root_dir_path = os.path.join(basename, root.replace(src, ""))
+                subdir = os.path.relpath(root, src)
+                root_dir_path = os.path.normpath(os.path.join(basename, subdir))
 
-                await self.shell("mkdir -p {}/{}".format(dest, root_dir_path))
+                await self.shell('mkdir -p "{}"'.format(os.path.normpath(os.path.join(dest, root_dir_path))))
 
                 for item in files:
-                    await self._push(os.path.join(root, item), os.path.join(dest, root_dir_path, item), mode, progress)
+                    await self._push(os.path.normpath(os.path.join(root, item)), os.path.normpath(os.path.join(dest, root_dir_path, item)), mode, progress)
 
     async def pull(self, src, dest):
         sync_conn = await self.sync()

@@ -30,6 +30,17 @@ except ImportError:
     from pipes import quote as cmd_quote
 
 
+def _get_src_info(src):
+    """Get information about the contents of a folder; used in :meth:`Device.push`."""
+    exists = os.path.exists(src)
+    isfile = os.path.isfile(src)
+    isdir = os.path.isdir(src)
+    basename = os.path.basename(src)
+    walk = None if not isdir else list(os.walk(src))
+
+    return exists, isfile, isdir, basename, walk
+
+
 class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats):
     INSTALL_RESULT_PATTERN = "(Success|Failure|Error)\s?(.*)"
     UNINSTALL_RESULT_PATTERN = "(Success|Failure.*|.*Unknown package:.*)"
@@ -55,24 +66,22 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
             sync.push(src, dest, mode, progress)
 
     def push(self, src, dest, mode=0o644, progress=None):
-        if not os.path.exists(src):
+        exists, isfile, isdir, basename, walk = _get_src_info(src)
+        if not exists:
             raise FileNotFoundError("Cannot find {}".format(src))
-        elif os.path.isfile(src):
+
+        if isfile:
             self._push(src, dest, mode, progress)
-        elif os.path.isdir(src):
 
-            basename = os.path.basename(src)
+        elif isdir:
+            for root, dirs, files in walk:
+                subdir = os.path.relpath(root, src)
+                root_dir_path = os.path.normpath(os.path.join(basename, subdir))
 
-            for root, dirs, files in os.walk(src):
-                subdir = root.replace(src, "")
-                if subdir.startswith("/"):
-                    subdir = subdir[1:]
-                root_dir_path = os.path.join(basename, subdir)
-
-                self.shell("mkdir -p {}/{}".format(dest, root_dir_path))
+                self.shell('mkdir -p "{}"'.format(os.path.normpath(os.path.join(dest, root_dir_path))))
 
                 for item in files:
-                    self._push(os.path.join(root, item), os.path.join(dest, root_dir_path, item), mode, progress)
+                    self._push(os.path.normpath(os.path.join(root, item)), os.path.normpath(os.path.join(dest, root_dir_path, item)), mode, progress)
 
     def pull(self, src, dest):
         sync_conn = self.sync()
