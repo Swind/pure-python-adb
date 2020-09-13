@@ -33,6 +33,7 @@ class ConnectionAsync:
                 self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
 
         except (OSError, asyncio.TimeoutError) as e:
+            await self.close()
             raise RuntimeError("ERROR: connecting to {}:{} {}.\nIs adb running on your computer?".format(self.host, self.port, e))
 
         return self
