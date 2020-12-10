@@ -162,7 +162,7 @@ class Transport(Command):
         return True
 
     def reverse(self, remote, local):
-        cmd = "reverse:forward:{remote}:{local}".format(
+        cmd = "reverse:forward:{remote};{local}".format(
             remote=remote,
             local=local
         )
