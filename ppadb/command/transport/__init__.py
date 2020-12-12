@@ -124,6 +124,16 @@ class Transport(Command):
 
         return reverses
 
+    def remove_reverse(self, remote):
+        cmd = "reverse:killforward:{}".format(remote)
+        conn = self.create_connection()
+        with conn:
+            conn.send(cmd)
+
+    def remove_reverse_all(self):
+        for reverse in self.list_reverses():
+            self.remove_reverse(reverse['remote'])
+
     def local(self, path):
         if ":" not in path:
             path = "localfilesystem:{}".format(path)
