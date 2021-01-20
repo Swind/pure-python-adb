@@ -20,17 +20,22 @@ def _get_src_info(src):
     if not exists:
         return exists, None, None
 
-    timestamp = os.stat(src).st_mtime
+    timestamp = int(os.stat(src).st_mtime)
     total_size = os.path.getsize(src)
 
     return exists, timestamp, total_size
 
 
 class SyncAsync:
+    TEMP_PATH = '/data/local/tmp'
     DATA_MAX_LENGTH = 65536
 
     def __init__(self, connection):
         self.connection = connection
+
+    @staticmethod
+    def temp(path):
+        return "{}/{}".format(SyncAsync.TEMP_PATH, os.path.basename(path))
 
     async def push(self, src, dest, mode, progress=None):
         """Push from local path |src| to |dest| on device.
