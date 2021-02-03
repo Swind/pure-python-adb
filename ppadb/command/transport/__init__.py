@@ -27,7 +27,7 @@ class Transport(Command):
         else:
             result = conn.read_all()
             conn.close()
-            return result.decode('utf-8')
+            return result.decode('ISO-8859-1')
 
     def sync(self):
         conn = self.create_connection()
