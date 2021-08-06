@@ -37,7 +37,7 @@ Installation
 
 .. code-block:: console
 
-    $pip install -U pure-python-adb
+    $pip3 install -U pure-python-adb
 
 Examples
 ========
