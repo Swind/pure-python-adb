@@ -23,7 +23,7 @@ class Transport(Command):
         conn.send(cmd)
 
         if handler:
-            handler(conn)
+            return handler(conn)
         else:
             result = conn.read_all()
             conn.close()
