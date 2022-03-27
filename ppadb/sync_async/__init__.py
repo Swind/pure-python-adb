@@ -20,7 +20,7 @@ def _get_src_info(src):
     if not exists:
         return exists, None, None
 
-    timestamp = os.stat(src).st_mtime
+    timestamp = int(os.stat(src).st_mtime)
     total_size = os.path.getsize(src)
 
     return exists, timestamp, total_size
