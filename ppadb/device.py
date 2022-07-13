@@ -102,7 +102,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
         if shared_mass_storage: parameters.append("-s")
         if internal_system_memory: parameters.append("-f")
         if downgrade: parameters.append("-d")
-        if grand_all_permissions: parameters.append("-g")
+        if grant_all_permissions: parameters.append("-g")
 
         try:
             result = self.shell("pm install {} {}".format(" ".join(parameters), cmd_quote(dest)))
