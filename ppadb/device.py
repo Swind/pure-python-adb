@@ -89,7 +89,7 @@ class Device(Transport, Serial, Input, Utils, WM, Traffic, CPUStat, BatteryStats
                 shared_mass_storage=False,  # -s
                 internal_system_memory=False,  # -f
                 downgrade=False,  # -d
-                grand_all_permissions=False  # -g
+                grant_all_permissions=False  # -g
                 ):
         dest = Sync.temp(path)
         self.push(path, dest)
